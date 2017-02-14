@@ -125,7 +125,10 @@ app.intent('negatives', {
         if (currentIntent.step == 1) {
           res.say('Ok').shouldEndSession(false).send();
           currentIntent.step = 0;
-        } 
+        } else if (currentIntent.step == 2) {
+          res.say('Ok').shouldEndSession(false).send();
+          currentIntent.step = 0;
+        }
         break;
 
       case "arthritis":
