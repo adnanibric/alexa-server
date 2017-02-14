@@ -37,7 +37,7 @@ app.intent('afirmatives', {
       case "cholesterol":
         if (currentIntent.step == 1) {
           res.say('I will need to do reasearch about restourants. For now make sure to eat a lot vegetables and fruits').shouldEndSession(false).send();
-          currentIntent.step++;
+          currentIntent.step = 0;
         } else if (currentIntent.step == 2) {
           res.say('OK I will work on that').shouldEndSession(false).send();
           currentIntent.step = 0;
