@@ -1,0 +1,21 @@
+{
+  "name": "veritas-alexa",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "author": "adnan ibric",
+  "license": "ISC",
+  "dependencies": {
+    "alexa-app": "^3.0.0",
+    "chai": "^3.5.0",
+    "chai-as-promised": "^6.0.0",
+    "drupal-client": "^0.2.0",
+    "drupal-services-api": "^0.1.4",
+    "lodash": "^4.17.4",
+    "mocha": "^3.2.0",
+    "request-promise": "^4.1.1"
+  }
+}
