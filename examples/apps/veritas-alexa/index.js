@@ -182,6 +182,7 @@ app.intent('mydisease', {
 },
   function(req, res) {
     currentIntent.name = req.data.request.intent.name;
+    currentIntent.step = 0;
     var disease = req.slot('DISEASE');
     var veritasHelper = new VeritasDataHelper();
       veritasHelper.requestDiseaseByName().then(function(response){
@@ -210,6 +211,7 @@ app.intent('prevent', {
 },
   function(req, res) {
     currentIntent.name = req.data.request.intent.name;
+    currentIntent.step = 0;
     var disease = req.slot('DISEASE');
     var veritasHelper = new VeritasDataHelper();
       veritasHelper.requestDiseasesList().then(function(response){
@@ -238,6 +240,7 @@ app.intent('information', {
 },
   function(req, res) {
     currentIntent.name = req.data.request.intent.name;
+    currentIntent.step = 0;
     var disease = req.slot('DISEASE');
     var veritasHelper = new VeritasDataHelper();
       veritasHelper.requestDiseasesList().then(function(response){
@@ -273,6 +276,7 @@ app.intent('cholesterol', {
 },
   function(req, res) {
     currentIntent.name = req.data.request.intent.name;
+    currentIntent.step = 0;
     res.say("Your last cholesterol levels were slightly above normal range. You should also know that you have a genetic variant in your genome that pre disposes you to high cholesterol. Would you like me to recommend a restaurant for lunch with good food options that can help you lower your cholesterol ?").shouldEndSession(false).send();
     currentIntent.step++;
   }
@@ -301,6 +305,7 @@ app.intent('prostate', {
 },
   function(req, res) {
     currentIntent.name = req.data.request.intent.name;
+    currentIntent.step = 0;
     res.say("Based on your Veritas myGenome you have an above average risk of developing prostate cancer based on your family history and mutations in your RNASEL gene. Would you like me to read you recommendations from Veritas how to manage the risk?").shouldEndSession(false).send();
     currentIntent.step++;
   }
@@ -311,6 +316,7 @@ app.intent('arthritis', {
 },
   function(req, res) {
     currentIntent.name = req.data.request.intent.name;
+    currentIntent.step = 0;
     res.say("Based on your Veritas myGenome analysis you have a high risk of developing rheumatoid arthritis in later year of your life, after 40. Veritas recommended you test your blood markers for inflammation at least once a year. Your last test was 6 months a go and it was in normal range. Would you like me to order you another test?").shouldEndSession(false).send();
     currentIntent.step++;
   }
@@ -321,6 +327,7 @@ app.intent('daredevil', {
 },
   function(req, res) {
     currentIntent.name = req.data.request.intent.name;
+    currentIntent.step = 0;
     res.say("It seems that you have a mutation in your DDR4 gene which affect the brain’s levels of or response to the neurotransmitter dopamine, a substance that is known to influence feelings of pleasure, reward and gratification, sometimes associated with being a risk taker. I can pull up the reference articles Veritas has for this genetic condition.").shouldEndSession(false).send();
     currentIntent.step++;
   }
@@ -331,6 +338,7 @@ app.intent('mygenome', {
 },
   function(req, res) {
     currentIntent.name = req.data.request.intent.name;
+    currentIntent.step = 0;
     res.say("There are five new findings based on most recent publications. Would you like me to read the to you?").shouldEndSession(false).send();
     currentIntent.step++;
   }
