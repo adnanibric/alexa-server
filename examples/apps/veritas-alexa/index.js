@@ -20,7 +20,7 @@ app.intent('afirmatives', {
     switch (currentIntent.name) {
       case "mydisease":
         if (currentIntent.step == 1) {
-          res.say('Refer to the following link on your phone').shouldEndSession(false).send();
+          res.say('Refer to the following link on your phone').shouldEndSession(true).send();
           open("http://qasecure.veritasgenetics.com/mygenome-reporting/#/dashboard");
           currentIntent.step = 0;
         }
@@ -28,7 +28,7 @@ app.intent('afirmatives', {
 
       case "prevent":
         if (currentIntent.step == 1) {
-          res.say('Refer to the following link on your phone').shouldEndSession(false).send();
+          res.say('Refer to the following link on your phone').shouldEndSession(true).send();
           open("http://qasecure.veritasgenetics.com/mygenome-reporting/#/dashboard");
           currentIntent.step = 0;
         }
@@ -39,7 +39,7 @@ app.intent('afirmatives', {
           res.say('I will need to do reasearch about restourants. For now make sure to eat a lot vegetables and fruits').shouldEndSession(false).send();
           currentIntent.step = 0;
         } else if (currentIntent.step == 2) {
-          res.say('OK I will work on that').shouldEndSession(false).send();
+          res.say('OK I will work on that').shouldEndSession(true).send();
           currentIntent.step = 0;
         }
         break;
@@ -49,7 +49,7 @@ app.intent('afirmatives', {
           res.say('Veritas recommendation based on American Urological Association is that you have your PSA exam at least once a year. Would you like me to schedule you an appointment?').shouldEndSession(false).send();
           currentIntent.step++;
         } else if (currentIntent.step == 2) {
-          res.say('OK I will work on that').shouldEndSession(false).send();
+          res.say('OK I will work on that').shouldEndSession(true).send();
           currentIntent.step = 0;
         }
         break;
@@ -59,14 +59,14 @@ app.intent('afirmatives', {
           res.say('OK I have placed the order with Veritas, your kit will arrive on Monday.  Would you like me to remind you when the results are back from the lab?').shouldEndSession(false).send();
           currentIntent.step++;
         } else if (currentIntent.step == 2) {
-          res.say('OK will do').shouldEndSession(false).send();
+          res.say('OK will do').shouldEndSession(true).send();
           currentIntent.step = 0;
         }
         break;
 
       case "daredevil":
         if (currentIntent.step == 1) {
-          res.say('OK I will add it to your reading list').shouldEndSession(false).send();
+          res.say('OK I will add it to your reading list').shouldEndSession(true).send();
           open("https://well.blogs.nytimes.com/2014/02/19/the-genetics-of-being-a-daredevil/");
           currentIntent.step = 0;
         } 
@@ -83,7 +83,7 @@ app.intent('afirmatives', {
           res.say('Researchers reported finding the gray hair gene, IRF4. Individual with mutations in this gene are likely to have gray hair. Genes are not the only factor in 6,000 individuals they analyzed. You do not have this mutation. Would you like me to order you some “touch of gray product”').shouldEndSession(false).send();
           currentIntent.step++;
         } else if (currentIntent.step == 4) {
-          res.say('Ok').shouldEndSession(false).send();
+          res.say('Ok').shouldEndSession(true).send();
           currentIntent.step = 0;
         }
         break;
@@ -99,14 +99,14 @@ app.intent('negatives', {
     switch (currentIntent.name) {
       case "mydisease":
         if (currentIntent.step == 1) {
-          res.say("Ok").shouldEndSession(false).send();
+          res.say("Ok").shouldEndSession(true).send();
           currentIntent.step = 0;
         }
         break;
 
       case "prevent":
         if (currentIntent.step == 1) {
-          res.say("Ok").shouldEndSession(false).send();
+          res.say("Ok").shouldEndSession(true).send();
           currentIntent.step = 0;
         }
         break;
@@ -116,31 +116,31 @@ app.intent('negatives', {
           res.say('Would you like me to schedule you a test to check your levels ?').shouldEndSession(false).send();
           currentIntent.step++;
         } else if (currentIntent.step == 2) {
-          res.say('Ok').shouldEndSession(false).send();
+          res.say('Ok').shouldEndSession(true).send();
           currentIntent.step = 0;
         }
         break;
 
       case "prostate":
         if (currentIntent.step == 1) {
-          res.say('Ok').shouldEndSession(false).send();
+          res.say('Ok').shouldEndSession(true).send();
           currentIntent.step = 0;
         } else if (currentIntent.step == 2) {
-          res.say('Ok').shouldEndSession(false).send();
+          res.say('Ok').shouldEndSession(true).send();
           currentIntent.step = 0;
         }
         break;
 
       case "arthritis":
         if (currentIntent.step == 1) {
-          res.say('Ok').shouldEndSession(false).send();
+          res.say('Ok').shouldEndSession(true).send();
           currentIntent.step = 0;
         } 
         break;
 
       case "daredevil":
         if (currentIntent.step == 1) {
-          res.say('Ok').shouldEndSession(false).send();
+          res.say('Ok').shouldEndSession(true).send();
           currentIntent.step = 0;
         } 
         break;
@@ -153,7 +153,7 @@ app.intent('negatives', {
           res.say('Ok').shouldEndSession(false).send();
           currentIntent.step = 0;
         } else if (currentIntent.step == 3) {
-          res.say('Ok').shouldEndSession(false).send();
+          res.say('Ok').shouldEndSession(true).send();
           currentIntent.step = 0;
         } 
         break;
@@ -168,7 +168,7 @@ app.intent('diseases', {
       var veritasHelper = new VeritasDataHelper();
       veritasHelper.requestDiseasesList().then(function(){
         var prompt = 'Refer to the following link on your phone';
-        res.say(prompt).shouldEndSession(false).send();
+        res.say(prompt).shouldEndSession(true).send();
         open("http://qasecure.veritasgenetics.com/mygenome-reporting/#/dashboard");
       }).catch(function(){
         var prompt = 'Sorry can you repeat the question';
@@ -191,13 +191,13 @@ app.intent('mydisease', {
       veritasHelper.requestDiseaseByName().then(function(response){
         var results = response;
         for (var i = results.length - 1; i >= 0; i--) {
-          if ( results[i].disease_name == disease ) {
+          if ( results[i].disease_name.toUpperCase() == disease.toUpperCase() ) {
             res.say("You have potential risk of " + disease + ". Would you like to learn more").shouldEndSession(false).send();
             currentIntent.step++;
             return;
           } 
         }
-        res.say("You are at low risk for " + disease).shouldEndSession(false).send();
+        res.say("You are at low risk for " + disease).shouldEndSession(true).send();
       }).catch(function(error){
         var prompt = 'Sorry can you repeat the question';
         res.say(prompt).shouldEndSession(false).send();
@@ -221,13 +221,13 @@ app.intent('prevent', {
         var results = response;
         for (var i = results.length - 1; i >= 0; i--) {
           console.log(results[i].node_title, disease,results[i].description !== null);
-          if ( results[i].node_title == disease && results[i].description !== null ) {
+          if ( results[i].node_title.toUpperCase() == disease.toUpperCase() && results[i].description !== null ) {
             res.say(results[i].description + " Would you like to learn more?").shouldEndSession(false).send();
             currentIntent.step++;
             return;
           } 
         }
-        res.say("I do not have any information about " + disease).shouldEndSession(false).send();
+        res.say("I do not have any information about " + disease).shouldEndSession(true).send();
       }).catch(function(error){
         var prompt = 'Sorry can you repeat the question';
         res.say(prompt).shouldEndSession(false).send();
@@ -271,7 +271,7 @@ app.intent('tylanol', {
 },
   function(req, res) {
     currentIntent.name = req.data.request.intent.name;
-    res.say("Based on your Veritas myGenome you are a fast metabolizer of Tylenol which means you should not take high doses. You should consult a doctor about specifics.").shouldEndSession(false).send();
+    res.say("Based on your Veritas myGenome you are a fast metabolizer of Tylenol which means you should not take high doses. You should consult a doctor about specifics.").shouldEndSession(true).send();
   }
 );
 
@@ -291,7 +291,7 @@ app.intent('smartest', {
 },
   function(req, res) {
     currentIntent.name = req.data.request.intent.name;
-    res.say("Maybe Dr.George Church but Dr.Topol is in the top 10").shouldEndSession(false).send();
+    res.say("Maybe Dr.George Church but Dr.Topol is in the top 10").shouldEndSession(true).send();
   }
 );
 
@@ -300,7 +300,7 @@ app.intent('best', {
 },
   function(req, res) {
     currentIntent.name = req.data.request.intent.name;
-    res.say("Veritas Genetics of course.").shouldEndSession(false).send();
+    res.say("Veritas Genetics of course.").shouldEndSession(true).send();
   }
 );
 
