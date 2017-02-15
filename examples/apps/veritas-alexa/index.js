@@ -21,7 +21,7 @@ app.intent('afirmatives', {
       case "mydisease":
         if (currentIntent.step == 1) {
           res.say('Refer to the following link on your phone').shouldEndSession(false).send();
-          open("http://qasecure.veritasgenetics.com/mygenome-reporting/");
+          open("http://qasecure.veritasgenetics.com/mygenome-reporting/#/dashboard");
           currentIntent.step = 0;
         }
         break;
@@ -29,7 +29,7 @@ app.intent('afirmatives', {
       case "prevent":
         if (currentIntent.step == 1) {
           res.say('Refer to the following link on your phone').shouldEndSession(false).send();
-          open("http://qasecure.veritasgenetics.com/mygenome-reporting/");
+          open("http://qasecure.veritasgenetics.com/mygenome-reporting/#/dashboard");
           currentIntent.step = 0;
         }
         break;
@@ -192,12 +192,12 @@ app.intent('mydisease', {
         var results = response;
         for (var i = results.length - 1; i >= 0; i--) {
           if ( results[i].disease_name == disease ) {
-            res.say("You have potential risk of {{disease}}. Would you like to learn more").shouldEndSession(false).send();
+            res.say("You have potential risk of " + disease + ". Would you like to learn more").shouldEndSession(false).send();
             currentIntent.step++;
             return;
           } 
         }
-        res.say("You are not at low risk for {{disease}}").shouldEndSession(false).send();
+        res.say("You are at low risk for " + disease).shouldEndSession(false).send();
       }).catch(function(error){
         var prompt = 'Sorry can you repeat the question';
         res.say(prompt).shouldEndSession(false).send();
@@ -220,13 +220,14 @@ app.intent('prevent', {
       veritasHelper.requestDiseasesList().then(function(response){
         var results = response;
         for (var i = results.length - 1; i >= 0; i--) {
-          if ( results[i].disease_name == disease ) {
-            res.say("This are information about {{disease}}, would you like to learn more").shouldEndSession(false).send();
+          console.log(results[i].node_title, disease,results[i].description !== null);
+          if ( results[i].node_title == disease && results[i].description !== null ) {
+            res.say(results[i].description + " Would you like to learn more?").shouldEndSession(false).send();
             currentIntent.step++;
             return;
           } 
         }
-        res.say("I do not have any information about {{disease}}").shouldEndSession(false).send();
+        res.say("I do not have any information about " + disease).shouldEndSession(false).send();
       }).catch(function(error){
         var prompt = 'Sorry can you repeat the question';
         res.say(prompt).shouldEndSession(false).send();
@@ -235,7 +236,7 @@ app.intent('prevent', {
   }
 );
 
-app.intent('information', {
+/*app.intent('information', {
    'slots': {
     'DISEASE': 'DISEASENAME'
    },
@@ -263,7 +264,7 @@ app.intent('information', {
       });
       return false;
   }
-);
+);*/
 
 app.intent('tylanol', {
   'utterances': ['{am I allergic to Tylenol}']

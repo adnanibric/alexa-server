@@ -28,7 +28,7 @@ VeritasDataHelper.prototype.requestDiseasesList = function() {
 VeritasDataHelper.prototype.getDiseasesList = function() {
   var options = {
     method: 'GET',
-    uri: ENDPOINT + '/results.php?view=phenotype_user_export',
+    uri: ENDPOINT + '/results.php?view=get_diseases',
     headers: {
         'Cookie': logged_user.session_name+'='+logged_user.sessid
 
