@@ -172,7 +172,7 @@ app.intent('diseases', {
         open("http://qasecure.veritasgenetics.com/mygenome-reporting/#/dashboard");
       }).catch(function(){
         var prompt = 'Sorry can you repeat the question';
-        res.say(prompt).shouldEndSession(false).send();
+        res.say(prompt).shouldEndSession(true).send();
       });
       return false;
   });
@@ -200,7 +200,7 @@ app.intent('mydisease', {
         res.say("You are at low risk for " + disease).shouldEndSession(true).send();
       }).catch(function(error){
         var prompt = 'Sorry can you repeat the question';
-        res.say(prompt).shouldEndSession(false).send();
+        res.say(prompt).shouldEndSession(true).send();
       });
       return false;
   }
@@ -230,7 +230,7 @@ app.intent('prevent', {
         res.say("I do not have any information about " + disease).shouldEndSession(true).send();
       }).catch(function(error){
         var prompt = 'Sorry can you repeat the question';
-        res.say(prompt).shouldEndSession(false).send();
+        res.say(prompt).shouldEndSession(true).send();
       });
       return false;
   }
