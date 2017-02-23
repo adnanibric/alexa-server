@@ -20,16 +20,19 @@ app.intent('afirmatives', {
     switch (currentIntent.name) {
       case "mydisease":
         if (currentIntent.step == 1) {
-          res.say('Refer to the following link on your phone').shouldEndSession(true).send();
-          open("http://qasecure.veritasgenetics.com/mygenome-reporting/#/dashboard");
+          res.say('Refer to the following link on your phone. Would you like to book you an appointment with a genetic counselor at Veritas?').shouldEndSession(true).send();
+          res.card("" , "http://qasecure.veritasgenetics.com/mygenome-reporting/#/dashboard/");
+          currentIntent.step++;
+        } else if (currentIntent.step == 2) {
+          res.say('Done').shouldEndSession(true).send();
           currentIntent.step = 0;
         }
         break;
 
       case "prevent":
         if (currentIntent.step == 1) {
-          res.say('Refer to the following link on your phone').shouldEndSession(true).send();
-          open("http://qasecure.veritasgenetics.com/mygenome-reporting/#/dashboard");
+          res.say('Refer to the link on your phone').shouldEndSession(true).send();
+          res.card("" , "http://qasecure.veritasgenetics.com/mygenome-reporting/#/dashboard");
           currentIntent.step = 0;
         }
         break;
@@ -39,7 +42,7 @@ app.intent('afirmatives', {
           res.say('I will need to do reasearch about restourants. For now make sure to eat a lot vegetables and fruits').shouldEndSession(false).send();
           currentIntent.step = 0;
         } else if (currentIntent.step == 2) {
-          res.say('OK I will work on that').shouldEndSession(true).send();
+          res.say('I am on it').shouldEndSession(true).send();
           currentIntent.step = 0;
         }
         break;
@@ -67,7 +70,7 @@ app.intent('afirmatives', {
       case "daredevil":
         if (currentIntent.step == 1) {
           res.say('OK I will add it to your reading list').shouldEndSession(true).send();
-          open("https://well.blogs.nytimes.com/2014/02/19/the-genetics-of-being-a-daredevil/");
+         res.card("" , "https://well.blogs.nytimes.com/2014/02/19/the-genetics-of-being-a-daredevil/");
           currentIntent.step = 0;
         } 
         break;
@@ -87,6 +90,17 @@ app.intent('afirmatives', {
           currentIntent.step = 0;
         }
         break;
+
+          case "report":
+        if (currentIntent.step == 1) {
+          res.say('You need to talk to your Doctor about your elevated risk of hereditary hemochromatosis, fanconi anemia, and BRIP1 cancer susceptibility. Would you like me to book you an appointment?').shouldEndSession(false).send();
+          currentIntent.step++;
+        } else if (currentIntent.step == 2) {
+          res.say('OK I am on it').shouldEndSession(true).send();
+          currentIntent.step = 0;
+        }
+        break;
+
     }
   });
 
@@ -100,6 +114,9 @@ app.intent('negatives', {
       case "mydisease":
         if (currentIntent.step == 1) {
           res.say("Ok").shouldEndSession(true).send();
+          currentIntent.step = 0;
+        } else if (currentIntent.step == 2) {
+          res.say('Ok').shouldEndSession(true).send();
           currentIntent.step = 0;
         }
         break;
@@ -157,6 +174,15 @@ app.intent('negatives', {
           currentIntent.step = 0;
         } 
         break;
+
+      case "report":
+        if (currentIntent.step == 1) {
+          res.say('OK, I have sent you an email with the highlights of your results so you can look at them later.').shouldEndSession(true).send();
+          currentIntent.step = 0;
+        } else if (currentIntent.step == 2) {
+          res.say('OK, I have sent you an email with more detailed information so you can look at it later.').shouldEndSession(false).send();
+          currentIntent.step = 0; }
+        break;
     }
   });
 
@@ -169,7 +195,7 @@ app.intent('diseases', {
       veritasHelper.requestDiseasesList().then(function(){
         var prompt = 'Refer to the following link on your phone';
         res.say(prompt).shouldEndSession(true).send();
-        open("http://qasecure.veritasgenetics.com/mygenome-reporting/#/dashboard");
+        res.card("", "http://qasecure.veritasgenetics.com/mygenome-reporting/#/dashboard");
       }).catch(function(){
         var prompt = 'Sorry can you repeat the question';
         res.say(prompt).shouldEndSession(true).send();
@@ -181,7 +207,7 @@ app.intent('mydisease', {
    'slots': {
     'DISEASE': 'DISEASENAME'
    },
-  'utterances': ['{am} {I} {at risk} {for|at} {-|DISEASE}']
+  'utterances': ['{if} {I} {am} {at risk} {for|at} {-|DISEASE}']
 },
   function(req, res) {
     currentIntent.name = req.data.request.intent.name;
@@ -192,12 +218,12 @@ app.intent('mydisease', {
         var results = response;
         for (var i = results.length - 1; i >= 0; i--) {
           if ( results[i].disease_name.toUpperCase() == disease.toUpperCase() ) {
-            res.say("You have potential risk of " + disease + ". Would you like to learn more").shouldEndSession(false).send();
+            res.say("Yes, your genetic profile predisposes you to " + disease + ". Would you like to learn more").shouldEndSession(false).send();
             currentIntent.step++;
             return;
           } 
         }
-        res.say("You are at low risk for " + disease).shouldEndSession(true).send();
+        res.say("I am sorry, we don't have information about " + disease + " yet. I will let you know when we do, OK.").shouldEndSession(true).send();
       }).catch(function(error){
         var prompt = 'Sorry can you repeat the question';
         res.say(prompt).shouldEndSession(true).send();
@@ -217,12 +243,11 @@ app.intent('prevent', {
     currentIntent.step = 0;
     var disease = req.slot('DISEASE');
     var veritasHelper = new VeritasDataHelper();
-      veritasHelper.requestDiseasesList().then(function(response){
+      veritasHelper.requestDiseaseByName().then(function(response){
         var results = response;
         for (var i = results.length - 1; i >= 0; i--) {
-          console.log(results[i].node_title, disease,results[i].description !== null);
-          if ( results[i].node_title.toUpperCase() == disease.toUpperCase() && results[i].description !== null ) {
-            res.say(results[i].description + " Would you like to learn more?").shouldEndSession(false).send();
+          if ( results[i].disease_name.toUpperCase() == disease.toUpperCase() && results[i].lifestyle_action_and_prevention_manual !== null ) {
+            res.say(results[i].lifestyle_action_and_prevention_manual + " Would you like to learn more?").shouldEndSession(false).send();
             currentIntent.step++;
             return;
           } 
@@ -271,7 +296,7 @@ app.intent('tylanol', {
 },
   function(req, res) {
     currentIntent.name = req.data.request.intent.name;
-    res.say("Based on your Veritas myGenome you are a fast metabolizer of Tylenol which means you should not take high doses. You should consult a doctor about specifics.").shouldEndSession(true).send();
+    res.say("You are a fast metabolizer of Tylenol, so you should talk to your doctor about adjusting your dosage.").shouldEndSession(true).send();
   }
 );
 
@@ -281,7 +306,7 @@ app.intent('cholesterol', {
   function(req, res) {
     currentIntent.name = req.data.request.intent.name;
     currentIntent.step = 0;
-    res.say("Your last cholesterol levels were slightly above normal range. You should also know that you have a genetic variant in your genome that pre disposes you to high cholesterol. Would you like me to recommend a restaurant for lunch with good food options that can help you lower your cholesterol ?").shouldEndSession(false).send();
+    res.say("In your last blood work your cholesterol levels were slightly elevated. You should also know you have a genetic variant that predisposes you to having high  cholesterol. Would you like me to recommend a restaurant for lunch with healthy food options?").shouldEndSession(false).send();
     currentIntent.step++;
   }
 );
@@ -347,6 +372,35 @@ app.intent('mygenome', {
     currentIntent.step++;
   }
 );
+
+app.intent('report', {
+  'utterances': ['{is my report from Veritas ready?}']
+},
+  function(req, res) {
+    currentIntent.name = req.data.request.intent.name;
+    currentIntent.step = 0;
+    res.say("Yes, it is. Would you like me to give you the highlights?").shouldEndSession(false).send();
+    currentIntent.step++;
+  }
+);
+
+app.intent('AMAZON.StopIntent', {},
+  function(req, res) {
+    currentIntent.name = null;
+    currentIntent.step = 0;
+    res.say("Ok").shouldEndSession(true).send();
+  }
+);
+
+app.intent('AMAZON.CancelIntent', {},
+  function(req, res) {
+    currentIntent.name = null;
+    currentIntent.step = 0;
+    res.say("Ok").shouldEndSession(true).send();
+  }
+);
+
+
 
 //hack to support custom utterances in utterance expansion string
 var utterancesMethod = app.utterances;
