@@ -38,7 +38,7 @@ app.intent('afirmatives', {
 
       case "cholesterol":
         if (currentIntent.step == 1) {
-          res.say('I will need to do reasearch about restaurants. For now make sure to eat a lot vegetables and fruits').shouldEndSession(true).send();
+          res.say('I will need to do research about restaurants. For now make sure to eat a lot of fruits and vegetables').shouldEndSession(true).send();
           currentIntent.step = 0;
         } else if (currentIntent.step == 2) {
           res.say('I am on it').shouldEndSession(true).send();
@@ -68,13 +68,13 @@ app.intent('afirmatives', {
 
       case "mygenome":
         if (currentIntent.step == 1) {
-          res.say('Scripps research published that recipients of stents may be at risk for sudden cardiac arrest if they have a mutation in CYP gene. You have this mutation and therefore should be notify your doctor to include it in your medical record. Would you like me to do that?').shouldEndSession(false).send();
+          res.say('Scripps research published that recipients of stents may be at risk for sudden cardiac arrest if they have a mutation in CYP gene. You have this mutation and therefore should notify your doctor to include it in your medical record. Would you like me to do that?').shouldEndSession(false).send();
           currentIntent.step++;
         } else if (currentIntent.step == 2) {
           res.say('OK I will do that. Would you like to to read the other finding').shouldEndSession(false).send();
           currentIntent.step++;
         } else if (currentIntent.step == 3) {
-          res.say('Researchers reported finding the gray hair gene, IRF4. Individual with mutations in this gene are likely to have gray hair. Genes are not the only factor in 6,000 individuals they analyzed. You do not have this mutation. Would you like me to order you some “touch of gray product”').shouldEndSession(false).send();
+          res.say('Researchers reported finding that individuals with mutations in the IRF4 gene are likely to have gray hair. Genes are not the only factor in 6,000 individuals they analyzed. You have this mutation. Would you like me to order you some “touch of gray product”').shouldEndSession(false).send();
           currentIntent.step++;
         } else if (currentIntent.step == 4) {
           res.say('Ok').shouldEndSession(true).send();
@@ -190,7 +190,7 @@ app.intent('mydisease', {
             return;
           } 
         }
-        res.say("I am sorry, we don't have information about " + disease + " yet. I will let you know when we do, OK.").shouldEndSession(true).send();
+        res.say("I am sorry, we don't have information about " + disease + " yet. I will let you know when we do.").shouldEndSession(true).send();
       }).catch(function(error){
         var prompt = 'Sorry can you repeat the question';
         res.say(prompt).shouldEndSession(true).send();
@@ -266,7 +266,7 @@ app.intent('arthritis', {
   function(req, res) {
     currentIntent.name = req.data.request.intent.name;
     currentIntent.step = 0;
-    res.say("Based on your Veritas myGenome analysis you have a high risk of developing rheumatoid arthritis in later year of your life, after 40. Veritas recommended you test your blood markers for inflammation at least once a year. Your last test was 6 months a go and it was in normal range. Would you like me to order you another test?").shouldEndSession(false).send();
+    res.say("Based on your Veritas myGenome analysis you have a high risk of developing rheumatoid arthritis after 40. Veritas recommends you test your blood markers for inflammation at least once a year. Your last test was 6 months a go and it was in normal range. Would you like me to order you another test?").shouldEndSession(false).send();
     currentIntent.step++;
   }
 );
@@ -277,13 +277,13 @@ app.intent('mygenome', {
   function(req, res) {
     currentIntent.name = req.data.request.intent.name;
     currentIntent.step = 0;
-    res.say("There are five new findings based on most recent publications. Would you like me to read the to you?").shouldEndSession(false).send();
+    res.say("There are five new findings based on most recent publications. Would you like me to read them to you?").shouldEndSession(false).send();
     currentIntent.step++;
   }
 );
 
 app.intent('report', {
-  'utterances': ['{is my report ready}']
+  'utterances': ['{if my report ready}']
 },
   function(req, res) {
     currentIntent.name = req.data.request.intent.name;
