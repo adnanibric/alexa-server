@@ -9,18 +9,17 @@ var currentIntent = {'name' : null,'step' : 0};
 
 app.launch(function(req, res) {
   var prompt = 'Welcome to Veritas App';
-  res.say(prompt).reprompt(prompt).shouldEndSession(false);
+  res.say(prompt).reprompt(prompt).shouldEndSession(true);
 });
 
 app.intent('afirmatives', {
   'utterances': ['{yes|sure} {|please}']
 },
   function(req, res) {
-    console.log(currentIntent);
     switch (currentIntent.name) {
       case "mydisease":
         if (currentIntent.step == 1) {
-          res.say('Refer to the following link on your phone. Would you like to book you an appointment with a genetic counselor at Veritas?').shouldEndSession(true).send();
+          res.say('Refer to the following link on your phone. Would you like to book you an appointment with a genetic counselor at Veritas?').shouldEndSession(false).send();
           res.card("" , "http://qasecure.veritasgenetics.com/mygenome-reporting/#/dashboard/");
           currentIntent.step++;
         } else if (currentIntent.step == 2) {
@@ -39,7 +38,7 @@ app.intent('afirmatives', {
 
       case "cholesterol":
         if (currentIntent.step == 1) {
-          res.say('I will need to do reasearch about restourants. For now make sure to eat a lot vegetables and fruits').shouldEndSession(false).send();
+          res.say('I will need to do reasearch about restaurants. For now make sure to eat a lot vegetables and fruits').shouldEndSession(true).send();
           currentIntent.step = 0;
         } else if (currentIntent.step == 2) {
           res.say('I am on it').shouldEndSession(true).send();
@@ -164,10 +163,10 @@ app.intent('negatives', {
 
       case "mygenome":
         if (currentIntent.step == 1) {
-          res.say('Ok').shouldEndSession(false).send();
+          res.say('Ok').shouldEndSession(true).send();
           currentIntent.step = 0;
         } else if (currentIntent.step == 2) {
-          res.say('Ok').shouldEndSession(false).send();
+          res.say('Ok').shouldEndSession(true).send();
           currentIntent.step = 0;
         } else if (currentIntent.step == 3) {
           res.say('Ok').shouldEndSession(true).send();
@@ -180,7 +179,7 @@ app.intent('negatives', {
           res.say('OK, I have sent you an email with the highlights of your results so you can look at them later.').shouldEndSession(true).send();
           currentIntent.step = 0;
         } else if (currentIntent.step == 2) {
-          res.say('OK, I have sent you an email with more detailed information so you can look at it later.').shouldEndSession(false).send();
+          res.say('OK, I have sent you an email with more detailed information so you can look at it later.').shouldEndSession(true).send();
           currentIntent.step = 0; }
         break;
     }
@@ -217,6 +216,7 @@ app.intent('mydisease', {
       veritasHelper.requestDiseaseByName().then(function(response){
         var results = response;
         for (var i = results.length - 1; i >= 0; i--) {
+          console.log(results[i].disease_name.toUpperCase() , disease.toUpperCase());
           if ( results[i].disease_name.toUpperCase() == disease.toUpperCase() ) {
             res.say("Yes, your genetic profile predisposes you to " + disease + ". Would you like to learn more").shouldEndSession(false).send();
             currentIntent.step++;
@@ -246,6 +246,7 @@ app.intent('prevent', {
       veritasHelper.requestDiseaseByName().then(function(response){
         var results = response;
         for (var i = results.length - 1; i >= 0; i--) {
+          console.log(results[i].disease_name.toUpperCase(),disease.toUpperCase())
           if ( results[i].disease_name.toUpperCase() == disease.toUpperCase() && results[i].lifestyle_action_and_prevention_manual !== null ) {
             res.say(results[i].lifestyle_action_and_prevention_manual + " Would you like to learn more?").shouldEndSession(false).send();
             currentIntent.step++;
@@ -260,36 +261,6 @@ app.intent('prevent', {
       return false;
   }
 );
-
-/*app.intent('information', {
-   'slots': {
-    'DISEASE': 'DISEASENAME'
-   },
-  'utterances': ['{for more information on the} {-|DISEASE}']
-},
-  function(req, res) {
-    currentIntent.name = req.data.request.intent.name;
-    currentIntent.step = 0;
-    var disease = req.slot('DISEASE');
-    var veritasHelper = new VeritasDataHelper();
-      veritasHelper.requestDiseasesList().then(function(response){
-        var results = response;
-        console.log(results);
-        for (var i = results.length - 1; i >= 0; i--) {
-          if ( results[i].disease_name == disease ) {
-            res.say("This are more information about {{disease}}, would you like to learn more").shouldEndSession(false).send();
-            currentIntent.step++;
-            return;
-          } 
-        }
-        res.say("I do not have any information about {{disease}}").shouldEndSession(false).send();
-      }).catch(function(error){
-        var prompt = 'Sorry can you repeat the question';
-        res.say(prompt).shouldEndSession(false).send();
-      });
-      return false;
-  }
-);*/
 
 app.intent('tylanol', {
   'utterances': ['{am I allergic to Tylenol}']
