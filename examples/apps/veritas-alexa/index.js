@@ -108,7 +108,6 @@ app.intent('negatives', {
   'utterances': ['{no} {|thanks|thank you}']
 },
   function(req, res) {
-    console.log(currentIntent);
     switch (currentIntent.name) {
       case "mydisease":
         if (currentIntent.step == 1) {
@@ -345,7 +344,7 @@ app.intent('mygenome', {
 );
 
 app.intent('report', {
-  'utterances': ['{is my report from Veritas ready?}']
+  'utterances': ['{is my report ready?}']
 },
   function(req, res) {
     currentIntent.name = req.data.request.intent.name;
