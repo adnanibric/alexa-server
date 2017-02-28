@@ -66,14 +66,6 @@ app.intent('afirmatives', {
         }
         break;
 
-      case "daredevil":
-        if (currentIntent.step == 1) {
-          res.say('OK I will add it to your reading list').shouldEndSession(true).send();
-         res.card("" , "https://well.blogs.nytimes.com/2014/02/19/the-genetics-of-being-a-daredevil/");
-          currentIntent.step = 0;
-        } 
-        break;
-
       case "mygenome":
         if (currentIntent.step == 1) {
           res.say('Scripps research published that recipients of stents may be at risk for sudden cardiac arrest if they have a mutation in CYP gene. You have this mutation and therefore should be notify your doctor to include it in your medical record. Would you like me to do that?').shouldEndSession(false).send();
@@ -153,13 +145,6 @@ app.intent('negatives', {
         } 
         break;
 
-      case "daredevil":
-        if (currentIntent.step == 1) {
-          res.say('Ok').shouldEndSession(true).send();
-          currentIntent.step = 0;
-        } 
-        break;
-
       case "mygenome":
         if (currentIntent.step == 1) {
           res.say('Ok').shouldEndSession(true).send();
@@ -182,23 +167,6 @@ app.intent('negatives', {
           currentIntent.step = 0; }
         break;
     }
-  });
-
-app.intent('diseases', {
-  'utterances': ['{what} {diseases} {I am at risk} {|for|at}']
-},
-  function(req, res) {
-    console.log(req,res);
-      var veritasHelper = new VeritasDataHelper();
-      veritasHelper.requestDiseasesList().then(function(){
-        var prompt = 'Refer to the following link on your phone';
-        res.say(prompt).shouldEndSession(true).send();
-        res.card("", "http://qasecure.veritasgenetics.com/mygenome-reporting/#/dashboard");
-      }).catch(function(){
-        var prompt = 'Sorry can you repeat the question';
-        res.say(prompt).shouldEndSession(true).send();
-      });
-      return false;
   });
 
 app.intent('mydisease', {
@@ -281,24 +249,6 @@ app.intent('cholesterol', {
   }
 );
 
-app.intent('smartest', {
-  'utterances': ['{who is the smartest man in the world|who is the smartest man alive}']
-},
-  function(req, res) {
-    currentIntent.name = req.data.request.intent.name;
-    res.say("Maybe Dr.George Church but Dr.Topol is in the top 10").shouldEndSession(true).send();
-  }
-);
-
-app.intent('best', {
-  'utterances': ['{who is the best genetics company in the world}']
-},
-  function(req, res) {
-    currentIntent.name = req.data.request.intent.name;
-    res.say("Veritas Genetics of course.").shouldEndSession(true).send();
-  }
-);
-
 app.intent('prostate', {
   'utterances': ['{what is my risk of developing prostate cancer}']
 },
@@ -321,17 +271,6 @@ app.intent('arthritis', {
   }
 );
 
-app.intent('daredevil', {
-  'utterances': ['{I read an article about genetics of being a daredevil, do I have those genes|do I have daredevil genes}']
-},
-  function(req, res) {
-    currentIntent.name = req.data.request.intent.name;
-    currentIntent.step = 0;
-    res.say("It seems that you have a mutation in your DDR4 gene which affect the brain’s levels of or response to the neurotransmitter dopamine, a substance that is known to influence feelings of pleasure, reward and gratification, sometimes associated with being a risk taker. I can pull up the reference articles Veritas has for this genetic condition.").shouldEndSession(false).send();
-    currentIntent.step++;
-  }
-);
-
 app.intent('mygenome', {
   'utterances': ['{anything new in my genome}']
 },
@@ -344,7 +283,7 @@ app.intent('mygenome', {
 );
 
 app.intent('report', {
-  'utterances': ['{is my report ready?}']
+  'utterances': ['{is my report ready}']
 },
   function(req, res) {
     currentIntent.name = req.data.request.intent.name;
