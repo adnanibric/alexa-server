@@ -229,15 +229,6 @@ app.intent('prevent', {
   }
 );
 
-app.intent('tylanol', {
-  'utterances': ['{am I allergic to Tylenol}']
-},
-  function(req, res) {
-    currentIntent.name = req.data.request.intent.name;
-    res.say("You are a fast metabolizer of Tylenol, so you should talk to your doctor about adjusting your dosage.").shouldEndSession(true).send();
-  }
-);
-
 app.intent('cholesterol', {
   'utterances': ['{how is my cholesterol}']
 },
@@ -283,7 +274,7 @@ app.intent('mygenome', {
 );
 
 app.intent('report', {
-  'utterances': ['{if my report ready}']
+  'utterances': ['{if my report is ready}']
 },
   function(req, res) {
     currentIntent.name = req.data.request.intent.name;
@@ -308,7 +299,14 @@ app.intent('AMAZON.CancelIntent', {},
     res.say("Ok").shouldEndSession(true).send();
   }
 );
-
+app.intent('tylanol', {
+  'utterances': ['{allergic to Tylenol}']
+},
+  function(req, res) {
+    currentIntent.name = req.data.request.intent.name;
+    res.say("You are a fast metabolizer of Tylenol, so you should talk to your doctor about adjusting your dosage.").shouldEndSession(true).send();
+  }
+);
 
 
 //hack to support custom utterances in utterance expansion string
